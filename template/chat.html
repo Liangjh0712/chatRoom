@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./chat.css">
+</head>
+
+<body>
+    <div id="chart">
+        <div id="members"></div>
+        <div id="history">
+
+        </div>
+        <div id="inputPanel">
+            <textarea id="input" cols="30" rows="3"></textarea>
+            <br>
+            <button id="send">Send</button>
+        </div>
+    </div>
+    <script>
+        const sendElement = document.getElementById('send');
+        const ws = new WebSocket('ws://localhost:3000');
+        const historyElement = document.getElementById('history');
+        ws.addEventListener('message', message => {
+            let pElement = document.createElement('p');
+            pElement.textContent = message.data;
+            historyElement.appendChild(pElement);
+        });
+
+        sendElement.addEventListener('click', e => {
+            let data = document.getElementById('input').value;
+            ws.send(data);
+        })
+    </script>
+</body>
+
+</html>
