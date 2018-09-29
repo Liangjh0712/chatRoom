@@ -22,7 +22,7 @@ app.use(jwtKoa({
 
 app.use(static(config.staticPath));
 app.use(bodyParser());
-const creatWebSocketServer = require('./src/webScket');
+const creatWebSocketServer = require('./src/webSocket');
 
 app.use(router.routes());
 
@@ -82,6 +82,13 @@ router.post('/login', async (ctx, next) => {
     ctx.response.body = {
         authorization: token
     }
-})
+});
 
-creatWebSocketServer(server);
+// router.get('/getusers', async (ctx, next) => {
+//     const users = wsObject.getUsers();
+//     ctx.response.body = users;
+// });
+
+// router.get('')
+
+creatWebSocketServer(server, router);
