@@ -69,7 +69,7 @@ const creatWebSocketServer = (server, router) => {
         }
 
         ws.addEventListener('message', evt => {
-            let data = JSON.parse(evt.data);
+            let data = JSON.parse(evt.data.replace(/(\<)|(\>)/mg, (s, p1, p2) => { if (p1) return '&lt;'; if (p2) return '&gt;' }));
             let sendMessage = { type: 'message', info: { user: { username: user.username }, content: null } };
             if (data.type === 'getUserList') {
                 let content = users.map(val => val.username).join(',');

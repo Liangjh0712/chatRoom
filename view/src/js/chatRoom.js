@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 class ChatRoom extends React.Component {
+    username = window.localStorage.getItem('username');
     constructor(props) {
         super(props);
         this.state = {
@@ -51,7 +52,12 @@ class ChatRoom extends React.Component {
     getChatData = (data = []) => {
         if (data.length === 0) return null;
         return (<ul style={style.ul}>{data.map((val, index) => {
-            return <li key={index}><h3><Avatar icon="user" style={{ backgroundColor: '#87d068' }} size='small' />  {val.user.username}</h3><p>{val.content}</p></li>
+            return <li key={index} style={{ padding: '5px 10px' }}><Avatar icon="user" style={{ backgroundColor: '#87d068', verticalAlign: 'top', float: 'left' }} size='small' /><div style={{ wordBreak: 'break-all', paddingLeft: '1.5em' }}><p style={{ fontWeight: 'bolder', paddingLeft: '1em' }}>{val.user.username}</p> <span style={{
+                backgroundColor: this.username === val.user.username ? '#2785d2de' : '#dcdbdbcc',
+                color: this.username === val.user.username ? 'white' : 'black',
+                borderRadius: '1em',
+                padding: '.2em 0.5em'
+            }}>{val.content}</span></div></li>
         })}</ul>);
     }
 
@@ -73,18 +79,11 @@ class ChatRoom extends React.Component {
 
     handleSubmit = e => {
         e && e.preventDefault();
-        // this.props.form.validateFields((err, data) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        console.log(4);
         let message = this.props.form.getFieldValue('message');
 
-        if (typeof message === 'string' && /\w/.test(message)) {
+        if (typeof message === 'string' && /[^\n|\r| ]/.test(message)) {
             this.sendMessage(message);
         } else {
-            console.log(5)
             this.setState({
                 inputError: 'error'
             });
@@ -92,12 +91,11 @@ class ChatRoom extends React.Component {
         this.props.form.setFieldsValue({
             message: ''
         })
-        // })
     };
 
     inputKeyDownHandle = e => {
         if (e.keyCode === 13) {
-            // this.handleSubmit();
+            this.handleSubmit();
             // this.buttonRef.current.click();
         }
     }
@@ -109,7 +107,7 @@ class ChatRoom extends React.Component {
         const { getFieldDecorator } = this.props.form;
         return (
             <div style={style.fatherDiv}>
-                <div style={{ display: 'flex', width: '100%', flexGrow: 1 }}>
+                <div style={{ display: 'flex', width: '100%', height: '100%' }}>
                     <div style={style.infoHistoryDiv}>
                         {this.getChatData(this.state.chatData)}
                     </div>
@@ -126,9 +124,7 @@ class ChatRoom extends React.Component {
                                 <Input.TextArea style={style.input} rows='4' onKeyDown={this.inputKeyDownHandle} onInput={e => this.setState({ inputError: '' })} />
                             )}
                         </Form.Item>
-                        <Button style={style.inputButton} htmlType='submit' ref={this.buttonRef} onClick={e => {
-
-                        }}>Submit</Button>
+                        <Button style={style.inputButton} htmlType='submit' ref={this.buttonRef}>Submit</Button>
 
                     </Form>
                 </div>
@@ -142,24 +138,21 @@ export default Chat;
 
 const style = {
     fatherDiv: {
-        width: '80%',
-        height: '80%',
-        border: 'solid',
+        width: '60%',
+        height: '70%',
         display: 'flex',
         flexWrap: 'wrap',
         flexFlow: 'column',
         backgroundColor: 'white',
+        position: 'relative',
     },
     ul: {
         listStyle: 'none',
         paddingLeft: 0,
-        height: '100%',
         margin: 0,
-        overflow: 'hidden'
+        overflow: 'auto'
     },
     infoHistoryDiv: {
-        minHeight: '70%',
-        maxHeight: '100%',
         width: '80%',
         overflow: 'hidden'
     },
@@ -176,17 +169,18 @@ const style = {
     inputDiv: {
         width: '100%',
         background: 'white',
-        height: 'fit-content',
         display: 'flex',
         flexFlow: 'column',
+        position: 'absolute',
+        transform: 'translateY(100%)',
+        bottom: '0',
         alignContent: 'center'
     },
     input: {
         // height: '100%',
     },
     inputButton: {
-        // height: '20%',
-        // alignSelf: 'flex-end',
+
         position: 'absolute',
         right: 0,
         bottom: 0,

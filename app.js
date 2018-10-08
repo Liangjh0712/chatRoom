@@ -80,7 +80,8 @@ router.post('/login', async (ctx, next) => {
     ctx.status = 200;
     let token = getToken({ username, password });
     ctx.response.body = {
-        authorization: token
+        authorization: token,
+        username
     }
 });
 

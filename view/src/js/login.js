@@ -29,6 +29,7 @@ class NormalLoginForm extends React.Component {
                     }
                 }).then(data => {
                     window.localStorage.setItem('authorization', data.authorization);
+                    window.localStorage.setItem('username', data.username);
                     this.setState({
                         loginSuccess: true
                     });
